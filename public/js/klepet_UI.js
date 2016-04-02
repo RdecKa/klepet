@@ -1,15 +1,6 @@
 function divElementEnostavniTekst(sporocilo) {
   sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/&lt;img/g, '<img').replace(/png\' \/&gt;/g, 'png\' />');
-  var besede = sporocilo.split(" ");
-  for (var i = 0; i < besede.length; i++) {
-    if ((besede[i].indexOf('http://') == 0 || besede[i].indexOf('https://') == 0) && 
-    (besede[i].indexOf('.jpg') == besede[i].length - 4 || 
-    besede[i].indexOf('.png') == besede[i].length - 4 || 
-    besede[i].indexOf('.gif') == besede[i].length - 4)) {
-      besede[i] = '<div class="media"><img src="' + besede[i] + '"></div>';
-    }
-  }
-  sporocilo = besede.join(" ");
+  sporocilo = dodajSlike(sporocilo);
   return $('<div style="font-weight: bold"></div>').html(sporocilo);
 }
 
@@ -25,6 +16,7 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   if (sporocilo.charAt(0) == '/') {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
+      sistemskoSporocilo = dodajSlike(sistemskoSporocilo);
       $('#sporocila').append(divElementHtmlTekst(sistemskoSporocilo));
     }
   } else {
@@ -135,4 +127,18 @@ function dodajSmeske(vhodnoBesedilo) {
       preslikovalnaTabela[smesko] + "' />");
   }
   return vhodnoBesedilo;
+}
+
+function dodajSlike(sporocilo) {
+  var besede = sporocilo.split(" ");
+  for (var i = 0; i < besede.length; i++) {
+    if ((besede[i].indexOf('http://') == 0 || besede[i].indexOf('https://') == 0) && 
+    (besede[i].indexOf('.jpg') == besede[i].length - 4 || 
+    besede[i].indexOf('.png') == besede[i].length - 4 || 
+    besede[i].indexOf('.gif') == besede[i].length - 4)) {
+      besede[i] = '<div class="media"><img src="' + besede[i] + '"></div>';
+    }
+  }
+  sporocilo = besede.join(" ");
+  return sporocilo;
 }
