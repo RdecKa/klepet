@@ -1,11 +1,16 @@
 function divElementEnostavniTekst(sporocilo) {
-  var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
-  if (jeSmesko) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
-  } else {
-    return $('<div style="font-weight: bold;"></div>').text(sporocilo);
+  sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/&lt;img/g, '<img').replace(/png\' \/&gt;/g, 'png\' />');
+  var besede = sporocilo.split(" ");
+  for (var i = 0; i < besede.length; i++) {
+    if ((besede[i].indexOf('http://') == 0 || besede[i].indexOf('https://') == 0) && 
+    (besede[i].indexOf('.jpg') == besede[i].length - 4 || 
+    besede[i].indexOf('.png') == besede[i].length - 4 || 
+    besede[i].indexOf('.gif') == besede[i].length - 4)) {
+      besede[i] = '<div class="media"><img src="' + besede[i] + '"></div>';
+    }
   }
+  sporocilo = besede.join(" ");
+  return $('<div style="font-weight: bold"></div>').html(sporocilo);
 }
 
 function divElementHtmlTekst(sporocilo) {
