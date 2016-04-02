@@ -122,9 +122,11 @@ function dodajSmeske(vhodnoBesedilo) {
     ":(": "sad.png"
   }
   for (var smesko in preslikovalnaTabela) {
-    vhodnoBesedilo = vhodnoBesedilo.replace(smesko,
+    while (vhodnoBesedilo.indexOf(smesko) > -1) {
+      vhodnoBesedilo = vhodnoBesedilo.replace(smesko, 
       "<img src='http://sandbox.lavbic.net/teaching/OIS/gradivo/" +
       preslikovalnaTabela[smesko] + "' />");
+    }
   }
   return vhodnoBesedilo;
 }
