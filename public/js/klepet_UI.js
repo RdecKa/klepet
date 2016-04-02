@@ -5,6 +5,7 @@ function divElementEnostavniTekst(sporocilo) {
 }
 
 function divElementHtmlTekst(sporocilo) {
+  sporocilo = dodajSlike(sporocilo);
   return $('<div></div>').html('<i>' + sporocilo + '</i>');
 }
 
@@ -16,7 +17,6 @@ function procesirajVnosUporabnika(klepetApp, socket) {
   if (sporocilo.charAt(0) == '/') {
     sistemskoSporocilo = klepetApp.procesirajUkaz(sporocilo);
     if (sistemskoSporocilo) {
-      sistemskoSporocilo = dodajSlike(sistemskoSporocilo);
       $('#sporocila').append(divElementHtmlTekst(sistemskoSporocilo));
     }
   } else {
