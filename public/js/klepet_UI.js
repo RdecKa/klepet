@@ -120,7 +120,7 @@ function dodajSmeske(vhodnoBesedilo) {
     "(y)": "like.png",
     ":*": "kiss.png",
     ":(": "sad.png"
-  }
+  };
   for (var smesko in preslikovalnaTabela) {
     while (vhodnoBesedilo.indexOf(smesko) > -1) {
       vhodnoBesedilo = vhodnoBesedilo.replace(smesko, 
@@ -133,12 +133,41 @@ function dodajSmeske(vhodnoBesedilo) {
 
 function dodajSlike(sporocilo) {
   var besede = sporocilo.split(" ");
+  var povezavaDoSmeskov = "http://sandbox.lavbic.net/teaching/OIS/gradivo/";
   for (var i = 0; i < besede.length; i++) {
-    if ((besede[i].indexOf('http://') == 0 || besede[i].indexOf('https://') == 0) && 
-    (besede[i].indexOf('.jpg') == besede[i].length - 4 || 
-    besede[i].indexOf('.png') == besede[i].length - 4 || 
-    besede[i].indexOf('.gif') == besede[i].length - 4)) {
-      besede[i] = '<div class="media"><img src="' + besede[i] + '"></div>';
+    var povezava = true, sprememba = false;
+    var zacetek = 0, konec = 0;
+    while (povezava) {
+      povezava = false;
+      var tp = besede[i].indexOf('http://', konec), tps = besede[i].indexOf('https://', konec);
+      var jp = besede[i].indexOf('.jpg', konec), pn = besede[i].indexOf('.png', konec), gi = besede[i].indexOf('.gif', konec);
+      if (tp > -1 && (tps < 0 || tp < tps)) {
+        zacetek = tp;
+        sprememba = true;
+      } else if (tps > -1) {
+        zacetek = tps;
+        sprememba = true;
+      }
+      if (jp > -1 && (pn < 0 || jp < pn) && (gi < 0 || jp < gi)) {
+        konec = jp + 4;
+        sprememba = true;
+      } else if (pn > -1 && (gi < 0 || pn < gi)) {
+        konec = pn + 4;
+        sprememba = true;
+      } else if (gi > -1) {
+        konec = gi + 4;
+        sprememba = true;
+      }
+      if (zacetek > -1 && konec > -1 && konec > zacetek && sprememba) {
+        povezava = true;
+        if (besede[i].substring(zacetek, konec).substr(0, povezavaDoSmeskov.length) != povezavaDoSmeskov) {
+          besede[i] = besede[i].substring(0, zacetek) + '<div class="media"><img src="' +
+          besede[i].substring(zacetek, konec) + '"></div>' +
+          besede[i].substring(konec, besede[i].length);
+          konec += 37; // 37 - dolzina niza '<div class="media"><img src=""></div>'
+        }
+      }
+      sprememba = false;
     }
   }
   sporocilo = besede.join(" ");
