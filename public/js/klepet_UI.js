@@ -161,10 +161,10 @@ function dodajSlike(sporocilo) {
       if (zacetek > -1 && konec > -1 && konec > zacetek && sprememba) {
         povezava = true;
         if (besede[i].substring(zacetek, konec).substr(0, povezavaDoSmeskov.length) != povezavaDoSmeskov) {
-          besede[i] = besede[i].substring(0, zacetek) + '<div class="media"><img src="' +
+          besede[i] = besede[i].substring(0, konec) + '<div class="media"><img src="' +
           besede[i].substring(zacetek, konec) + '"></div>' +
           besede[i].substring(konec, besede[i].length);
-          konec += 37; // 37 - dolzina niza '<div class="media"><img src=""></div>'
+          konec += 37 + besede[i].substring(zacetek, konec).length; // 37 - dolzina niza '<div class="media"><img src=""></div>'
         }
       }
       sprememba = false;
