@@ -136,7 +136,7 @@ function dodajSlike(sporocilo) {
   var povezavaDoSmeskov = "http://sandbox.lavbic.net/teaching/OIS/gradivo/";
   for (var i = 0; i < besede.length; i++) {
     var povezava = true, sprememba = false;
-    var zacetek = 0, konec = 0;
+    var zacetek = -1, konec = 0;
     while (povezava) {
       povezava = false;
       var tp = besede[i].indexOf('http://', konec), tps = besede[i].indexOf('https://', konec);
@@ -161,15 +161,11 @@ function dodajSlike(sporocilo) {
       if (zacetek > -1 && konec > -1 && konec > zacetek && sprememba) {
         povezava = true;
         if (besede[i].substring(zacetek, konec).substr(0, povezavaDoSmeskov.length) != povezavaDoSmeskov) {
-          besede[i] = besede[i].substring(0, konec) + '<div class="media"><img src="' +
-          besede[i].substring(zacetek, konec) + '"></div>' +
-          besede[i].substring(konec, besede[i].length);
-          konec += 37 + besede[i].substring(zacetek, konec).length; // 37 - dolzina niza '<div class="media"><img src=""></div>'
+          sporocilo += '<div class="media"><img src="' + besede[i].substring(zacetek, konec) + '"></div>';
         }
       }
       sprememba = false;
     }
   }
-  sporocilo = besede.join(" ");
   return sporocilo;
 }
