@@ -139,13 +139,14 @@ function dodajVideo(sporocilo) {
       zacetek = besede[i].indexOf("https://www.youtube.com/watch?v=", zacetek);
       if (zacetek > -1) {
         var konec = zacetek + 43;
-        besede[i] = besede[i].substring(0, konec) + '<iframe src="https://www.youtube.com/embed/' + besede[i].substring(zacetek + 32, konec) + '" allowfullscreen></iframe>' + besede[i].substring(konec, besede[i].length);
+        //besede[i] = besede[i].substring(0, konec) + '<iframe src="https://www.youtube.com/embed/' + besede[i].substring(zacetek + 32, konec) + '" allowfullscreen></iframe>' + besede[i].substring(konec, besede[i].length);
+        sporocilo += '<iframe src="https://www.youtube.com/embed/' + besede[i].substring(zacetek + 32, konec) + '" allowfullscreen></iframe>';
         zacetek = zacetek + 40 + 43;
         povezava = true;
       }
     }
   }
-  sporocilo = besede.join(" ");
+  //sporocilo = besede.join(" ");
   return sporocilo;
 
 }
