@@ -57,3 +57,14 @@ a {
 #pomoc {
   font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+
+.media {
+  margin-left: 20px;
+  width: 200px;
+  display: block;
+}
+
+.media .yt {
+  width: 100%;
+  height: 150px;
+}
