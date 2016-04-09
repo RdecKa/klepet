@@ -1,12 +1,14 @@
 function divElementEnostavniTekst(sporocilo) {
   sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/&lt;img/g, '<img').replace(/png\' \/&gt;/g, 'png\' />');
   sporocilo = dodajSlike(sporocilo);
+  sporocilo = dodajVideo(sporocilo);
   return $('<div style="font-weight: bold"></div>').html(sporocilo);
 }
 
 function divElementHtmlTekst(sporocilo) {
   sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/&lt;img/g, '<img').replace(/png\' \/&gt;/g, 'png\' />');
   sporocilo = dodajSlike(sporocilo);
+  sporocilo = dodajVideo(sporocilo);
   return $('<div></div>').html('<i>' + sporocilo + '</i>');
 }
 
@@ -172,6 +174,25 @@ function dodajSlike(sporocilo) {
         }
       }
       sprememba = false;
+    }
+  }
+  return sporocilo;
+}
+
+function dodajVideo(sporocilo) {
+  var besede = sporocilo.split(" ");
+  for (var i = 0; i < besede.length; i++) {
+    var povezava = true;
+    var zacetek = -1;
+    while(povezava) {
+      povezava = false;
+      zacetek = besede[i].indexOf("https://www.youtube.com/watch?v=", zacetek);
+      if (zacetek > -1) {
+        var konec = zacetek + 43;
+        sporocilo += '<iframe class="media yt" src="https://www.youtube.com/embed/' + besede[i].substring(zacetek + 32, konec) + '" allowfullscreen></iframe>';
+        zacetek = zacetek + 40 + 43;
+        povezava = true;
+      }
     }
   }
   return sporocilo;
