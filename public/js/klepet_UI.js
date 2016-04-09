@@ -1,14 +1,12 @@
 function divElementEnostavniTekst(sporocilo) {
-  var jeSmesko = sporocilo.indexOf('http://sandbox.lavbic.net/teaching/OIS/gradivo/') > -1;
-  if (jeSmesko) {
-    sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace('&lt;img', '<img').replace('png\' /&gt;', 'png\' />');
-    return $('<div style="font-weight: bold"></div>').html(sporocilo);
-  } else {
-    return $('<div style="font-weight: bold;"></div>').text(sporocilo);
-  }
+  sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/&lt;img/g, '<img').replace(/png\' \/&gt;/g, 'png\' />');
+  sporocilo = dodajSlike(sporocilo);
+  return $('<div style="font-weight: bold"></div>').html(sporocilo);
 }
 
 function divElementHtmlTekst(sporocilo) {
+  sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/&lt;img/g, '<img').replace(/png\' \/&gt;/g, 'png\' />');
+  sporocilo = dodajSlike(sporocilo);
   return $('<div></div>').html('<i>' + sporocilo + '</i>');
 }
 
@@ -129,11 +127,52 @@ function dodajSmeske(vhodnoBesedilo) {
     "(y)": "like.png",
     ":*": "kiss.png",
     ":(": "sad.png"
-  }
+  };
   for (var smesko in preslikovalnaTabela) {
-    vhodnoBesedilo = vhodnoBesedilo.replace(smesko,
+    while (vhodnoBesedilo.indexOf(smesko) > -1) {
+      vhodnoBesedilo = vhodnoBesedilo.replace(smesko, 
       "<img src='http://sandbox.lavbic.net/teaching/OIS/gradivo/" +
       preslikovalnaTabela[smesko] + "' />");
+    }
   }
   return vhodnoBesedilo;
+}
+
+function dodajSlike(sporocilo) {
+  var besede = sporocilo.split(" ");
+  var povezavaDoSmeskov = "http://sandbox.lavbic.net/teaching/OIS/gradivo/";
+  for (var i = 0; i < besede.length; i++) {
+    var povezava = true, sprememba = false;
+    var zacetek = -1, konec = 0;
+    while (povezava) {
+      povezava = false;
+      var tp = besede[i].indexOf('http://', konec), tps = besede[i].indexOf('https://', konec);
+      var jp = besede[i].indexOf('.jpg', konec), pn = besede[i].indexOf('.png', konec), gi = besede[i].indexOf('.gif', konec);
+      if (tp > -1 && (tps < 0 || tp < tps)) {
+        zacetek = tp;
+        sprememba = true;
+      } else if (tps > -1) {
+        zacetek = tps;
+        sprememba = true;
+      }
+      if (jp > -1 && (pn < 0 || jp < pn) && (gi < 0 || jp < gi)) {
+        konec = jp + 4;
+        sprememba = true;
+      } else if (pn > -1 && (gi < 0 || pn < gi)) {
+        konec = pn + 4;
+        sprememba = true;
+      } else if (gi > -1) {
+        konec = gi + 4;
+        sprememba = true;
+      }
+      if (zacetek > -1 && konec > -1 && konec > zacetek && sprememba) {
+        povezava = true;
+        if (besede[i].substring(zacetek, konec).substr(0, povezavaDoSmeskov.length) != povezavaDoSmeskov) {
+          sporocilo += '<div class="media"><img src="' + besede[i].substring(zacetek, konec) + '"></div>';
+        }
+      }
+      sprememba = false;
+    }
+  }
+  return sporocilo;
 }
